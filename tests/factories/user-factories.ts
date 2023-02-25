@@ -15,5 +15,5 @@ export async function createUser(user) {
         }
     })
 
-    return { userId: userCreated.id };
+    return { ...userCreated, password : user.password };
 }

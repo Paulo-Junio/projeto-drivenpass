@@ -1,6 +1,8 @@
 import { faker } from "@faker-js/faker";
 import supertest from "supertest";
 import app, { init } from "../../src";
+import { prisma } from "../../src/database/db";
+import { createUser } from "../factories/user-factories";
 import { createWifi } from "../factories/wifi-factories";
 import { cleanDb, generateValidToken } from "../helpers";
 
@@ -34,11 +36,16 @@ describe("GET: /wifi", () => {
             title: faker.internet.email(),
             network:faker.name.firstName(),
             password: faker.internet.password(10),
+        }
 
+        const validUserBody = {
+            email: faker.internet.email(),
+            password: faker.internet.password()
         }
         it("Deve responder com 200 e os post do usuário", async ()=> {
-            const {token, userId} = await generateValidToken()
-            const wifi = createWifi(validWifiBody, userId)
+            const user = await createUser(validUserBody)
+            const token = await generateValidToken(user)
+            await createWifi(validWifiBody, user.id)
             const response = await server.get("/wifi").set("Authorization", `Bearer ${token}`);
             expect(response.status).toBe(200);
             expect(response.status).toEqual(expect.arrayContaining([
@@ -77,9 +84,14 @@ describe("GET: /wifi/:id", () => {
             password: faker.internet.password(10),
 
         }
+        const validUserBody = {
+            email: faker.internet.email(),
+            password: faker.internet.password()
+        }
 
         it("Deve responder com 400 se o id estiver incorreto", async () => {
-            const token = await generateValidToken();
+            const user = await createUser(validUserBody)
+            const token = await generateValidToken(user)
       
             const response = await server.get("/wifi/0").set("Authorization", `Bearer ${token}`);
                 
@@ -87,8 +99,9 @@ describe("GET: /wifi/:id", () => {
           });
       
         it("Deve responder com 401 se o wifi não for do usuário", async () => {
-            const {token, userId} = await generateValidToken()
-            const wifiId = createWifi(validWifiBody, (userId + 1)) 
+            const user = await createUser(validUserBody)
+            const token = await generateValidToken(user)
+            const wifiId = createWifi(validWifiBody, (user.id + 1)) 
         
             const response = await server.get(`/wifi/${wifiId}`).set("Authorization", `Bearer ${token}`);
         
@@ -96,8 +109,9 @@ describe("GET: /wifi/:id", () => {
         });
         
         it("Deve responder com 200 e os post do usuário se o id for válido", async ()=> {
-            const {token, userId} = await generateValidToken()
-            const wifiId = createWifi(validWifiBody, userId)
+            const user = await createUser(validUserBody)
+            const token = await generateValidToken(user)
+            const wifiId = createWifi(validWifiBody, user.id)
             const response = await server.get(`/wifi/${wifiId}`).set("Authorization", `Bearer ${token}`);
             expect(response.status).toBe(200);
             expect(response.status).toEqual(expect.arrayContaining([
@@ -129,7 +143,10 @@ describe("POST: /wifi", () => {
     });
 
     describe("Quando o token é válido",  () => {
-
+        const validUserBody = {
+            email: faker.internet.email(),
+            password: faker.internet.password()
+        }
         it("Se não for enviado um body, deve responder com 401", async ()=> {
             const response = await server.post("/wifi");
     
@@ -137,7 +154,8 @@ describe("POST: /wifi", () => {
         })
     
         it("Se for enviado um body inválido, deve responder com 400", async ()=> {
-            const token = generateValidToken()
+            const user = await createUser(validUserBody)
+            const token = await generateValidToken(user)
             const invalidBody ={
                 title: faker.name.firstName(),
                 network: faker.name.firstName(),
@@ -149,7 +167,8 @@ describe("POST: /wifi", () => {
         })
         
         it("Se for enviado um body válido, deve responder com 200 e o wifi criado",async () => {
-            const token = generateValidToken()
+            const user = await createUser(validUserBody)
+            const token = await generateValidToken(user)
             const validBody ={
                 title: faker.name.firstName(),
                 network: faker.name.firstName(),
@@ -192,9 +211,14 @@ describe("DELETE: /wifi/:id", () => {
             password: faker.internet.password(10),
 
         }
+        const validUserBody = {
+            email: faker.internet.email(),
+            password: faker.internet.password()
+        }
 
         it("Deve responder com 400 se o id estiver incorreto", async () => {
-            const token = await generateValidToken();
+            const user = await createUser(validUserBody)
+            const token = await generateValidToken(user)
       
             const response = await server.delete("/wifi/0").set("Authorization", `Bearer ${token}`);
                 
@@ -202,8 +226,9 @@ describe("DELETE: /wifi/:id", () => {
           });
       
         it("Deve responder com 401 se o wifi não for do usuário", async () => {
-            const {token, userId} = await generateValidToken()
-            const wifiId = createWifi(validWifiBody, userId + 1) 
+            const user = await createUser(validUserBody)
+            const token = await generateValidToken(user)
+            const wifiId = createWifi(validWifiBody, user.id + 1) 
         
             const response = await server.delete(`/wifi/${wifiId}`).set("Authorization", `Bearer ${token}`);
         
@@ -211,8 +236,9 @@ describe("DELETE: /wifi/:id", () => {
         });
         
         it("Deve responder com 200  se o id for válido", async ()=> {
-            const {token, userId} = await generateValidToken()
-            const wifiId = createWifi(validWifiBody, userId)
+            const user = await createUser(validUserBody)
+            const token = await generateValidToken(user)
+            const wifiId = createWifi(validWifiBody, user.id)
             const response = await server.delete(`/wifi/${wifiId}`).set("Authorization", `Bearer ${token}`);
             expect(response.status).toBe(200);
         })

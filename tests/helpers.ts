@@ -10,15 +10,9 @@ export async function cleanDb() {
   await prisma.user.deleteMany({});
 };
 
-export async function generateValidToken() {
-  const validBody ={
-    email: faker.internet.email(),
-    password: faker.internet.password(10)
-  }
-  
-  const user = await createUser(validBody);
-  const token:string = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET);
+export async function generateValidToken(user) {
 
-  const response = {token, userId: user.userId}
-  return response;
+  const token:string = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+
+  return token;
 }

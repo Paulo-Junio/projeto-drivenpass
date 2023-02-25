@@ -1,9 +1,13 @@
-import prisma from "../database/db.js";
-import { wifiInput } from "../middlewares/wifi-middleware.js";
+import { prisma } from "../database/db.js";
 
+type wifiCreate = {
+  password: string;
+  title: string;
+  network: string;
+  userId: number
+}
 
-
-async function findWifiById(id:number){
+async function getWifiById(id:number){
   return prisma.network.findFirst({
     where: {id}
   })
@@ -15,7 +19,7 @@ async function getWifi(userId: number){
     })
 }
 
-async function createWifi(wifi: wifiInput) {
+async function createWifi(wifi: wifiCreate) {
     return prisma.network.create({
       data: wifi
     });
@@ -28,7 +32,7 @@ async function deleteWifi(id:number){
 }
 
 const wifiRepository = {
-    findWifiById,
+    getWifiById,
     getWifi,
     createWifi,
     deleteWifi

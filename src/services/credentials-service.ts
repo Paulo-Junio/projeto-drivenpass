@@ -58,7 +58,7 @@ async function postCredentials(credentials, userId: number) {
         throw Error("bad request")
     }
 
-    const newCredential = {...credentials, password: cryptr.encrypt(credentials.password) }
+    const newCredential = {...credentials, password: cryptr.encrypt(credentials.password), userId }
     return credentialsRepository.createCredentials(newCredential);
 }
 

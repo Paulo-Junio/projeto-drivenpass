@@ -1,6 +1,11 @@
-import app from "./index.js";
+import app, { init } from "./index.js";
 
-const port = 4000;
-app.listen(port, () => {
-  console.log(`Server is up and running on port ${port}`);
+
+const port = +process.env.PORT || 4000;
+
+init().then(() => {
+  app.listen(port, () => {
+    /* eslint-disable-next-line no-console */
+    console.log(`Server is listening on port ${port}.`);
+  });
 });

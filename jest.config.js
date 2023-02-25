@@ -1,16 +1,15 @@
-module.exports = {
-    preset: "ts-jest",
-    testEnvironment: "node",
-    moduleDirectories: ["node_modules", "src"],
-    transform: {
-      ".+\\.ts$": "ts-jest",
+
+
+export default {
+  preset: "ts-jest",
+  testEnvironment: "node",
+  extensionsToTreatAsEsm: [".ts"],
+  globals: {
+    "ts-jest": {
+      useESM: true,
     },
-    testMatch: ["<rootDir>/tests/**/*.(test|spec).ts"],
-    setupFiles: ["<rootDir>/tests/setup-envs.ts"],
-    moduleNameMapper: {
-      "@/(.*)": "<rootDir>/src/$1",
-      "@test/(.*)": "<rootDir>/tests/$1",
-      "axios": "axios/dist/node/axios.cjs"
-    },
-    restoreMocks: true,
-  };
+  },
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
+}

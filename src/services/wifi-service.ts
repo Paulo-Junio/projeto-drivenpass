@@ -28,7 +28,7 @@ async function getWifiById(userId: number, id:number) {
         throw Error("user doesn't exist")
     }
 
-    const wifiExist = await wifiRepository.findWifiById(id)
+    const wifiExist = await wifiRepository.getWifiById(id)
     if(!wifiExist){
         throw Error("wifi doesn't exist")
     }
@@ -53,7 +53,7 @@ async function postWifi(wifi: wifiInput, userId: number) {
         throw Error("bad request")
     }
 
-    const newWifi = {...wifi, password: cryptr.encrypt(wifi.password) }
+    const newWifi = {...wifi, password: cryptr.encrypt(wifi.password), userId }
     return wifiRepository.createWifi(newWifi);
 
 }
@@ -65,7 +65,7 @@ async function deleteWifiById(userId: number, id:number) {
         throw Error("user doesn't exist")
     }
 
-    const wifiExist = await wifiRepository.findWifiById(id)
+    const wifiExist = await wifiRepository.getWifiById(id)
     if(!wifiExist){
         throw Error("wifi doesn't exist")
     }

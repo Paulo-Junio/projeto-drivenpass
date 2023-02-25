@@ -2,7 +2,7 @@ import { Network } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { wifiSchema } from "../models/wifi-models.js";
 
-export type wifiInput = Omit<Network, "id">
+export type wifiInput = Omit<Network, "id" | "userId">
 
 export async function wifiValidation(req: Request, res: Response, next: NextFunction){
     const wifi = req.body as wifiInput;

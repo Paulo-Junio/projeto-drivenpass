@@ -9,7 +9,7 @@ export async function wifiValidation(req: Request, res: Response, next: NextFunc
 
     const {error} = wifiSchema.validate(wifi);
     if (error){
-        console.log("foi aqui")
+        
         return res.status(400).send(error.message);
     }
 

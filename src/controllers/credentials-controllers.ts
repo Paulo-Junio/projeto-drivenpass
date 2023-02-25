@@ -2,7 +2,7 @@ import credentialsService from "../services/credentials-service.js";
 
 
 
-export async function getCredential(req, res) {
+export async function getCredential(req , res) {
     const userId = Number(req.userId);
 
     try{
@@ -15,7 +15,7 @@ export async function getCredential(req, res) {
         if (error.message === "user doesn't exist") {
             return res.status(400).send(error.message);
           }
-        console.log(error)
+        
         return res.sendStatus(500)
     }
 }
@@ -43,7 +43,7 @@ export async function getCredentialsById(req, res) {
             return res.status(400).send(error.message);
         }
           
-        console.log(error)
+       
         return res.sendStatus(500)
     }
 }
@@ -64,7 +64,7 @@ export async function postCredential(req, res) {
         if (error.message === "bad request") {
             return res.status(400).send(error.message);
         }
-        console.log(error)
+        
         return res.sendStatus(500)
     }
 }
@@ -88,7 +88,7 @@ export async function deleteCredentialById(req, res) {
             return res.status(401).send(error.message);
         }
           
-        console.log(error)
+        
         return res.sendStatus(500)
     }
 }

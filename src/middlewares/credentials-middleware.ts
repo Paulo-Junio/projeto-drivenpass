@@ -8,7 +8,7 @@ export async function credentialsValidation(req: Request, res: Response, next: N
 
     const {error} = credentialSchema.validate(credential);
     if (error){
-        console.log("foi aqui")
+        
         return res.status(400).send(error.message);
     }
 

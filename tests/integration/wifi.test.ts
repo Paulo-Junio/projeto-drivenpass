@@ -9,7 +9,7 @@ beforeAll(async () => {
     await cleanDb();
 });
   
-afterEach(async () => {
+beforeEach(async () => {
     await cleanDb();
 });
 
@@ -58,14 +58,14 @@ describe("GET: /wifi", () => {
 
 describe("GET: /wifi/:id", () => {
     it("Deve responder 401 se não for enviado um token", async () => {
-        const response = await server.get("/wifi");
+        const response = await server.get("/wifi/0");
     
         expect(response.status).toBe(401);
     });
     
     it("Deve responder 401 se o token enviado não for válido", async () => {
         const token = faker.lorem.word()
-        const response = await server.get("/wifi").set("Authorization", `Bearer ${token}`);
+        const response = await server.get("/wifi/0").set("Authorization", `Bearer ${token}`);
     
         expect(response.status).toBe(401);
     });
@@ -81,7 +81,7 @@ describe("GET: /wifi/:id", () => {
         it("Deve responder com 400 se o id estiver incorreto", async () => {
             const token = await generateValidToken();
       
-            const response = await server.get("/network/0").set("Authorization", `Bearer ${token}`);
+            const response = await server.get("/wifi/0").set("Authorization", `Bearer ${token}`);
                 
             expect(response.status).toBe(400);
           });
@@ -90,7 +90,7 @@ describe("GET: /wifi/:id", () => {
             const {token, userId} = await generateValidToken()
             const wifiId = createWifi(validWifiBody, (userId + 1)) 
         
-            const response = await server.get(`/network/${wifiId}`).set("Authorization", `Bearer ${token}`);
+            const response = await server.get(`/wifi/${wifiId}`).set("Authorization", `Bearer ${token}`);
         
             expect(response.status).toBe(401);
         });
@@ -196,7 +196,7 @@ describe("DELETE: /wifi/:id", () => {
         it("Deve responder com 400 se o id estiver incorreto", async () => {
             const token = await generateValidToken();
       
-            const response = await server.delete("/network/0").set("Authorization", `Bearer ${token}`);
+            const response = await server.delete("/wifi/0").set("Authorization", `Bearer ${token}`);
                 
             expect(response.status).toBe(400);
           });
@@ -205,7 +205,7 @@ describe("DELETE: /wifi/:id", () => {
             const {token, userId} = await generateValidToken()
             const wifiId = createWifi(validWifiBody, userId + 1) 
         
-            const response = await server.delete(`/network/${wifiId}`).set("Authorization", `Bearer ${token}`);
+            const response = await server.delete(`/wifi/${wifiId}`).set("Authorization", `Bearer ${token}`);
         
             expect(response.status).toBe(401);
         });

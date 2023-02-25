@@ -9,7 +9,7 @@ beforeAll(async () => {
     await cleanDb();
 });
   
-afterEach(async () => {
+beforeEach(async () => {
     await cleanDb();
 });
 
@@ -59,14 +59,14 @@ describe("GET: /credential", () => {
 
 describe("GET: /credential/:id", () => {
     it("Deve responder 401 se não for enviado um token", async () => {
-        const response = await server.get("/credentiali");
+        const response = await server.get("/credential/0");
     
         expect(response.status).toBe(401);
     });
     
     it("Deve responder 401 se o token enviado não for válido", async () => {
         const token = faker.lorem.word()
-        const response = await server.get("/credential").set("Authorization", `Bearer ${token}`);
+        const response = await server.get("/credential/0").set("Authorization", `Bearer ${token}`);
     
         expect(response.status).toBe(401);
     });
@@ -92,7 +92,7 @@ describe("GET: /credential/:id", () => {
             const {token, userId} = await generateValidToken()
             const credentialId = createCredential(validCredentialBody, (userId + 1)) 
         
-            const response = await server.get(`/network/${credentialId}`).set("Authorization", `Bearer ${token}`);
+            const response = await server.get(`/credential/${credentialId}`).set("Authorization", `Bearer ${token}`);
         
             expect(response.status).toBe(401);
         });

@@ -4,7 +4,7 @@ import wifiService from "../services/wifi-service.js";
 
 export async function getWifi(req, res) {
     const userId = Number(req.userId);
-    console.log("userId no controler: ", userId)
+    
 
     try{
         const wifiUserList = await wifiService.getWifi(userId)
@@ -16,7 +16,7 @@ export async function getWifi(req, res) {
         if (error.message === "wifi doesn't exist") {
             return res.status(400).send(error.message);
           }
-        console.log(error)
+        
         return res.sendStatus(500)
     }
 }
@@ -40,7 +40,7 @@ export async function getWifiById(req, res) {
             return res.status(401).send(error.message);
         }
           
-        console.log(error)
+        
         return res.sendStatus(500)
     }
 }
@@ -61,7 +61,7 @@ export async function postWifi(req, res) {
         if (error.message === "bad request") {
             return res.status(400).send(error.message);
         }
-        console.log(error)
+        
         return res.sendStatus(500)
     }
 }
@@ -85,7 +85,7 @@ export async function deleteWifiById(req, res) {
             return res.status(401).send(error.message);
         }
           
-        console.log(error)
+       
         return res.sendStatus(500)
     }
 }

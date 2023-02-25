@@ -9,7 +9,7 @@ beforeAll(async () => {
     await cleanDb();
 });
   
-afterEach(async () => {
+beforeEach(async () => {
     await cleanDb();
 });
 
@@ -96,7 +96,7 @@ describe("POST: /sign-in", ()=>{
 
         const response = await server.post("/sign-in").send({...validBody, password: faker.internet.password(10)});
 
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(401);
     })
 
     it("Se for enviado um body válido, deve responder com 200 e um token", async ()=> {
